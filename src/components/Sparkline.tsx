@@ -68,7 +68,7 @@ export default function Sparkline({ symptom, points, dates, periods, height = 46
           <path
             d={d}
             fill="none"
-            stroke="var(--ramp-450)"
+            stroke="var(--text-primary)"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"

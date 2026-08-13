@@ -241,7 +241,7 @@ export default function TimelineChart({
           <path
             d={trendPath}
             fill="none"
-            stroke="var(--ramp-450)"
+            stroke="var(--text-primary)"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -264,7 +264,7 @@ export default function TimelineChart({
             cx={x(hover)}
             cy={y(hoverPoint.value)}
             r={5}
-            fill="var(--ramp-450)"
+            fill="var(--text-primary)"
             stroke="var(--surface-1)"
             strokeWidth={2}
           />
@@ -296,7 +296,7 @@ export default function TimelineChart({
 
       <div className="legend" style={{ marginTop: 8 }}>
         <span className="item">
-          <span className="swatch" style={{ background: 'var(--ramp-450)' }} />7 day trend
+          <span className="swatch" style={{ background: 'var(--text-primary)' }} />7 day trend
         </span>
         <span className="item">
           <span

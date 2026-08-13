@@ -75,7 +75,7 @@ export default function Trends() {
 
   if (!earliest) {
     return (
-      <Card title="Nothing to chart yet">
+      <Card title="Nothing to chart yet" icon="trends">
         <p className="small secondary">
           Log a few days first. The charts get useful at about two weeks, and genuinely useful once
           there is a stretch before a medication change to compare against.
@@ -155,12 +155,12 @@ export default function Trends() {
       </Card>
 
       {store.courses.some((c) => c.is_endocrine) && (
-        <Card title="Doses" subtitle="Every day in the window">
+        <Card title="Doses" subtitle="Every day in the window" icon="calendar">
           <AdherenceGrid dates={dates} logs={store.logs} />
         </Card>
       )}
 
-      <Card title="Everything at once" subtitle="Same window, same scale as each other where it makes sense">
+      <Card icon="trends" title="Everything at once" subtitle="Same window, same scale as each other where it makes sense">
         <div style={{ display: 'grid', gap: 4 }}>
           {active.map((s) => {
             const pts = seriesFor(s.id, store.entries, dates)

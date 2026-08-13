@@ -83,7 +83,7 @@ export default function Report() {
 
   return (
     <>
-      <Card title="Report" subtitle="Set the range, then print it or save it as a PDF">
+      <Card title="Report" subtitle="Set the range, then print it or save it as a PDF" icon="printer">
         <div className="grid-2 collapse no-print">
           <Field label="From">
             <input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
@@ -131,7 +131,7 @@ export default function Report() {
         </p>
       </div>
 
-      <Card title="Overview">
+      <Card title="Overview" icon="info">
         <table className="data">
           <tbody>
             <tr>
@@ -201,7 +201,7 @@ export default function Report() {
         </Card>
       )}
 
-      <Card title="Symptoms in this period">
+      <Card title="Symptoms in this period" icon="body">
         <table className="data">
           <thead>
             <tr>
@@ -237,7 +237,7 @@ export default function Report() {
       </Card>
 
       {eventsInRange.length > 0 && (
-        <Card title="Events">
+        <Card title="Events" icon="calendar">
           <table className="data">
             <tbody>
               {eventsInRange.map((e) => (
@@ -257,7 +257,7 @@ export default function Report() {
       )}
 
       {notes.length > 0 && (
-        <Card title="Notes" subtitle={`${notes.length} days with something written down`}>
+        <Card icon="note" title="Notes" subtitle={`${notes.length} days with something written down`}>
           <table className="data">
             <tbody>
               {notes.slice(0, 25).map((l) => (

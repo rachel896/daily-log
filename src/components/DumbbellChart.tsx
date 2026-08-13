@@ -9,9 +9,18 @@ interface Props {
 }
 
 const ROW_H = 34
-const LABEL_W = 140
-const PAD_R = 62
 const AXIS_H = 20
+
+/**
+ * On a phone there is not room for a symptom name, a plot and a "6 → 4"
+ * readout on one line. The readout is the first thing to go, because the table
+ * underneath already carries every number.
+ */
+function metrics(w: number) {
+  const showValues = w >= 430
+  const labelW = Math.round(Math.min(150, Math.max(84, w * 0.34)))
+  return { showValues, labelW, padR: showValues ? 96 : 24 }
+}
 
 const SCALE_HEADING: Record<Scale, string> = {
   sev: 'Rated 0 to 10',
@@ -94,10 +103,11 @@ function Facet({
     rows.reduce((m, r) => Math.max(m, r.a!.max, r.b!.max), 0),
   )
 
-  const w = Math.max(width, 300)
-  const plotW = Math.max(w - LABEL_W - PAD_R, 60)
+  const w = Math.max(width, 260)
+  const { showValues, labelW, padR } = metrics(w)
+  const plotW = Math.max(w - labelW - padR, 60)
   const height = rows.length * ROW_H + AXIS_H + 10
-  const x = (v: number) => LABEL_W + (v / max) * plotW
+  const x = (v: number) => labelW + (v / max) * plotW
 
   const ticks = axisTicks(scale, max)
 
@@ -131,13 +141,13 @@ function Facet({
           return (
             <g key={r.symptom.id}>
               <text
-                x={LABEL_W - 12}
+                x={labelW - 12}
                 y={cy + 4}
                 textAnchor="end"
                 fontSize={12}
                 fill="var(--text-primary)"
               >
-                {truncate(r.symptom.label, 22)}
+                {truncate(r.symptom.label, Math.max(10, Math.floor((labelW - 14) / 6.6)))}
               </text>
 
               <line
@@ -153,27 +163,30 @@ function Facet({
               <circle cx={xa} cy={cy} r={5} fill="var(--ramp-250)" stroke="var(--surface-1)" strokeWidth={2} />
               <circle cx={xb} cy={cy} r={5.5} fill="var(--ramp-600)" stroke="var(--surface-1)" strokeWidth={2} />
 
-              <text
-                x={w - 6}
-                y={cy + 4}
-                fontSize={11}
-                textAnchor="end"
-                fill="var(--text-secondary)"
-                style={{ fontVariantNumeric: 'tabular-nums' }}
-              >
-                {formatValue(r.a!.median, scale)} → {formatValue(r.b!.median, scale)}
-              </text>
+              {showValues && (
+                <text
+                  x={w - 4}
+                  y={cy + 4}
+                  fontSize={11}
+                  textAnchor="end"
+                  fill="var(--text-secondary)"
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {formatValue(r.a!.median, scale)} → {formatValue(r.b!.median, scale)}
+                </text>
+              )}
             </g>
           )
         })}
 
-        {ticks.map((t) => (
+        {ticks.map((t, i) => (
           <text
             key={`t-${t}`}
             className="axis-label"
             x={x(t)}
             y={rows.length * ROW_H + AXIS_H}
-            textAnchor="middle"
+            /* outer ticks anchor inward so they cannot run off the card */
+            textAnchor={i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle'}
           >
             {t}
           </text>

@@ -20,7 +20,7 @@ export default function Settings({ email, theme, setTheme, demo = false }: {
 
   return (
     <>
-      <Card title="What you track" subtitle="Turn things off to keep the daily log short">
+      <Card title="What you track" subtitle="Turn things off to keep the daily log short" icon="body">
         {CATEGORY_ORDER.map((cat) => {
           const list = byCategory(cat)
           if (!list.length) return null
@@ -123,7 +123,7 @@ export default function Settings({ email, theme, setTheme, demo = false }: {
         )}
       </Card>
 
-      <Card title="Parts" subtitle="The list you tap from on the daily log">
+      <Card title="Parts" subtitle="The list you tap from on the daily log" icon="people">
         {store.parts.map((p) => (
           <label key={p.id} className="list-item" style={{ cursor: 'pointer' }}>
             <input
@@ -159,7 +159,7 @@ export default function Settings({ email, theme, setTheme, demo = false }: {
         </div>
       </Card>
 
-      <Card title="Appearance">
+      <Card title="Appearance" icon="spark">
         <div className="seg">
           {(['system', 'light', 'dark'] as const).map((t) => (
             <button key={t} type="button" aria-pressed={theme === t} onClick={() => setTheme(t)}>
@@ -169,7 +169,7 @@ export default function Settings({ email, theme, setTheme, demo = false }: {
         </div>
       </Card>
 
-      <Card title="Your data" subtitle="It is yours, so take a copy whenever you want one">
+      <Card icon="download" title="Your data" subtitle="It is yours, so take a copy whenever you want one">
         <div className="row">
           <button className="btn" onClick={() => downloadCSV(store)}>
             Download CSV
@@ -184,7 +184,7 @@ export default function Settings({ email, theme, setTheme, demo = false }: {
         </p>
       </Card>
 
-      <Card title="Account">
+      <Card title="Account" icon="shield">
         {demo ? (
           <>
             <p className="small secondary">

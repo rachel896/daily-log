@@ -30,6 +30,7 @@ export default function Meds() {
   return (
     <>
       <Card
+        icon="meds"
         title="Endocrine therapy"
         subtitle="The drug the charts get grouped by"
         action={
@@ -75,6 +76,7 @@ export default function Meds() {
       </Card>
 
       <Card
+        icon="shield"
         title="Everything else"
         subtitle="Ovarian suppression, bone drugs, supplements, anything you want on the record"
         action={
@@ -131,6 +133,7 @@ export default function Meds() {
       )}
 
       <Card
+        icon="calendar"
         title="Events"
         subtitle="Marked on every chart, so a bad fortnight has context"
         action={

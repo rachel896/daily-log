@@ -283,6 +283,31 @@ export function formatValue(v: number, scale: Symptom['scale']): string {
   }
 }
 
+export type Band = 'none' | 'mild' | 'moderate' | 'severe'
+
+/**
+ * Turns a raw value into the word a person would use for it. Used for the
+ * severity pill, which always shows the word beside the colour so the colour
+ * is never carrying the meaning on its own.
+ *
+ * Returns null where a band would be meaningless, such as libido, which is
+ * rated with higher being better.
+ */
+export function severityBand(value: number, s: Symptom): Band | null {
+  if (!s.higher_is_worse) return null
+  const cuts: Record<Symptom['scale'], [number, number, number]> = {
+    sev: [0, 3, 6],
+    count: [0, 2, 5],
+    mins: [0, 15, 45],
+    bool: [0, 0, 0],
+  }
+  const [none, mild, moderate] = cuts[s.scale]
+  if (value <= none) return 'none'
+  if (value <= mild) return 'mild'
+  if (value <= moderate) return 'moderate'
+  return 'severe'
+}
+
 export function scaleMax(scale: Symptom['scale'], observedMax: number): number {
   switch (scale) {
     case 'sev':

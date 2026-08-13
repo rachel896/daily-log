@@ -11,6 +11,7 @@ import {
 } from '../lib/types'
 import SymptomInput from '../components/SymptomInput'
 import { Card, Chip, Field, Segmented } from '../components/ui'
+import { CATEGORY_ICON, Icon } from '../components/icons'
 
 export default function Today() {
   const store = useStore()
@@ -62,20 +63,26 @@ export default function Today() {
     <>
       {/* ---- date bar ---- */}
       <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <button className="btn ghost sm" onClick={() => setDate(shiftISO(date, -1))} aria-label="Previous day">
-          ‹
+        <button
+          className="btn ghost sm"
+          style={{ width: 38, padding: 0 }}
+          onClick={() => setDate(shiftISO(date, -1))}
+          aria-label="Previous day"
+        >
+          <Icon name="chevron" className="ico-14" style={{ transform: 'rotate(180deg)' }} />
         </button>
         <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontWeight: 650 }}>{relativeDay(date)}</div>
+          <h2 style={{ fontSize: '1.15rem' }}>{relativeDay(date)}</h2>
           <div className="tiny muted">{prettyDate(date)}</div>
         </div>
         <button
           className="btn ghost sm"
+          style={{ width: 38, padding: 0 }}
           onClick={() => setDate(shiftISO(date, 1))}
           disabled={isFuture}
           aria-label="Next day"
         >
-          ›
+          <Icon name="chevron" className="ico-14" />
         </button>
         {date !== todayISO() && (
           <button className="btn sm" onClick={() => setDate(todayISO())}>
@@ -88,6 +95,7 @@ export default function Today() {
       {/* ---- the dose ---- */}
       {course ? (
         <Card
+          icon="meds"
           title="Did you take it?"
           subtitle={`${DRUG_LABEL[course.drug]}${course.dose_mg ? `, ${course.dose_mg} mg` : ''}`}
         >
@@ -109,7 +117,7 @@ export default function Today() {
           )}
         </Card>
       ) : (
-        <Card title="No medication for this date">
+        <Card title="No medication for this date" icon="meds">
           <p className="small secondary">
             Add what you are taking under Meds and this day will start tracking doses. Logging
             symptoms before you start is worth doing, since that becomes the baseline everything
@@ -120,7 +128,7 @@ export default function Today() {
 
       {/* ---- symptoms ---- */}
       {CATEGORY_ORDER.filter((c) => byCategory.has(c)).map((cat) => (
-        <Card key={cat} title={CATEGORY_LABEL[cat]}>
+        <Card key={cat} title={CATEGORY_LABEL[cat]} icon={CATEGORY_ICON[cat]}>
           <div>
             {byCategory.get(cat)!.map((s) => (
               <SymptomInput
@@ -142,7 +150,7 @@ export default function Today() {
       ))}
 
       {/* ---- day shape ---- */}
-      <Card title="The day overall">
+      <Card title="The day overall" icon="body">
         <div className="grid-2 collapse">
           <Field label="Hours slept">
             <input
@@ -197,7 +205,7 @@ export default function Today() {
       </Card>
 
       {/* ---- parts ---- */}
-      <Card title="Who showed up" subtitle="Tap a part that was loud today, tap again to clear it.">
+      <Card title="Who showed up" icon="people" subtitle="Tap a part that was loud today, tap again to clear it.">
         <div className="row" style={{ gap: 6 }}>
           {store.parts
             .filter((p) => p.is_active)
@@ -254,7 +262,7 @@ export default function Today() {
       </Card>
 
       {/* ---- note ---- */}
-      <Card title="Anything else">
+      <Card title="Anything else" icon="note">
         <textarea
           key={`note-${date}`}
           defaultValue={log?.note ?? ''}

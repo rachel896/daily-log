@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Badge, type IconName } from './icons'
+import type { Band } from '../lib/stats'
 
 export function StatTile({
   label,
@@ -91,17 +93,20 @@ export function Card({
   action,
   children,
   subtitle,
+  icon,
 }: {
   title?: string
   subtitle?: string
   action?: ReactNode
+  icon?: IconName
   children: ReactNode
 }) {
   return (
     <section className="card">
       {(title || action) && (
         <header>
-          <div>
+          {icon && <Badge name={icon} />}
+          <div style={{ minWidth: 0 }}>
             {title && <h2>{title}</h2>}
             {subtitle && <p className="small muted" style={{ marginTop: 2 }}>{subtitle}</p>}
           </div>
@@ -112,6 +117,18 @@ export function Card({
       {children}
     </section>
   )
+}
+
+const BAND_WORD: Record<Band, string> = {
+  none: 'None',
+  mild: 'Mild',
+  moderate: 'Moderate',
+  severe: 'Severe',
+}
+
+/** Colour and the word together, so colour never carries the meaning alone. */
+export function SevPill({ band }: { band: Band }) {
+  return <span className={`sev ${band}`}>{BAND_WORD[band]}</span>
 }
 
 export function Banner({

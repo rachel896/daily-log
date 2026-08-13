@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { BODY_AREAS, type Symptom, type SymptomEntry } from '../lib/types'
 import { SYMPTOM_HINTS } from '../lib/catalog'
-import { formatValue } from '../lib/stats'
-import { Chip } from './ui'
+import { formatValue, severityBand } from '../lib/stats'
+import { Chip, SevPill } from './ui'
+import { Icon } from './icons'
 
 interface Props {
   symptom: Symptom
@@ -18,6 +19,7 @@ export default function SymptomInput({ symptom, entry, onChange, onClear }: Prop
   const value = entry ? Number(entry.value) : null
   const locations = entry?.locations ?? []
   const hint = SYMPTOM_HINTS[symptom.key]
+  const band = value === null ? null : severityBand(value, symptom)
 
   const set = (v: number) => onChange(v, locations.length ? locations : null)
 
@@ -35,19 +37,20 @@ export default function SymptomInput({ symptom, entry, onChange, onClear }: Prop
         <span className="spacer" />
         {value !== null ? (
           <>
+            {band && <SevPill band={band} />}
             <span className="val">{formatValue(value, symptom.scale)}</span>
             <button
               type="button"
               className="btn ghost sm"
               onClick={onClear}
               aria-label={`Clear ${symptom.label}`}
-              style={{ minHeight: 26, padding: '0 6px' }}
+              style={{ minHeight: 28, width: 28, padding: 0, color: 'var(--text-muted)' }}
             >
-              ✕
+              <Icon name="close" className="ico-14" />
             </button>
           </>
         ) : (
-          <span className="val unset">–</span>
+          <span className="val unset">Not logged</span>
         )}
       </div>
 

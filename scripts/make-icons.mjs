@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'public')
 
-const BG = [0x2a, 0x78, 0xd6]
+const BG = [0xd9, 0x53, 0x6f]
 const FG = [0xff, 0xff, 0xff]
 
 // The polyline from icon.svg, in its 512-unit design space.

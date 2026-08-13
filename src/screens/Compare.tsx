@@ -43,7 +43,7 @@ export default function Compare() {
 
   if (periods.length < 2 || !a || !b) {
     return (
-      <Card title="Nothing to compare yet">
+      <Card title="Nothing to compare yet" icon="compare">
         <p className="small secondary">
           This screen wakes up once you have two stretches to hold against each other: a run of days
           before you start a drug and a run of days on it, or one aromatase inhibitor followed by
@@ -62,7 +62,7 @@ export default function Compare() {
 
   return (
     <>
-      <Card title="Compare two stretches">
+      <Card title="Compare two stretches" icon="compare">
         <div className="grid-2 collapse">
           <Field label="Earlier">
             <select value={a.id} onChange={(e) => setAId(e.target.value)}>
@@ -120,7 +120,7 @@ export default function Compare() {
         <DumbbellChart rows={rows} labelA={shortLabel(a.label)} labelB={shortLabel(b.label)} />
       </Card>
 
-      <Card title="The numbers">
+      <Card title="The numbers" icon="report">
         <div style={{ overflowX: 'auto' }}>
           <table className="data">
             <thead>

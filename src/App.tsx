@@ -1,5 +1,6 @@
-import { useEffect, useState, type ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
+import { Icon, type IconName } from './components/icons'
 import { getClient } from './lib/supabase'
 import { loadConfig } from './lib/config'
 import { StoreProvider, useStore } from './lib/store'
@@ -17,23 +18,14 @@ import Settings from './screens/Settings'
 type Tab = 'today' | 'trends' | 'compare' | 'meds' | 'report' | 'settings'
 type Theme = 'system' | 'light' | 'dark'
 
-const TABS: { key: Tab; label: string; icon: ReactElement }[] = [
-  { key: 'today', label: 'Log', icon: icon('M4 6h16M4 12h16M4 18h9') },
-  { key: 'trends', label: 'Trends', icon: icon('M4 17l5-6 4 4 7-8') },
-  { key: 'compare', label: 'Compare', icon: icon('M6 8h12M6 16h12M9 5v6M15 13v6') },
-  { key: 'meds', label: 'Meds', icon: icon('M8 4h8v4l-3 3v9H11v-9L8 8z') },
-  { key: 'report', label: 'Report', icon: icon('M6 3h9l3 3v15H6zM9 12h6M9 16h6') },
-  { key: 'settings', label: 'Settings', icon: icon('M12 9a3 3 0 100 6 3 3 0 000-6M4 12h2m12 0h2M12 4v2m0 12v2') },
+const TABS: { key: Tab; label: string; icon: IconName }[] = [
+  { key: 'today', label: 'Log', icon: 'log' },
+  { key: 'trends', label: 'Trends', icon: 'trends' },
+  { key: 'compare', label: 'Compare', icon: 'compare' },
+  { key: 'meds', label: 'Meds', icon: 'meds' },
+  { key: 'report', label: 'Report', icon: 'report' },
+  { key: 'settings', label: 'Settings', icon: 'settings' },
 ]
-
-function icon(d: string) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-      strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d={d} />
-    </svg>
-  )
-}
 
 export default function App() {
   const [theme, setTheme] = useState<Theme>(
@@ -110,6 +102,10 @@ function Shell({
   return (
     <div className="app">
       <header className="topbar">
+        {/* Same mark as the home-screen icon, so the two read as one thing. */}
+        <span className="mark">
+          <Icon name="trends" />
+        </span>
         <span className="title">Symptom Log</span>
         {demo && (
           <span className="pill flat" style={{ borderColor: 'var(--axis)' }}>
@@ -130,7 +126,7 @@ function Shell({
             }}
             aria-current={tab === t.key ? 'page' : undefined}
           >
-            {t.icon}
+            <Icon name={t.icon} />
             <span>{t.label}</span>
           </button>
         ))}
