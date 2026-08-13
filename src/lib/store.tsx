@@ -45,6 +45,8 @@ const EMPTY: Data = {
 export interface StoreValue extends Data {
   loading: boolean
   error: string | null
+  /** The tables have not been created in this project yet. */
+  schemaMissing: boolean
   refresh: () => Promise<void>
 
   saveLog: (patch: Partial<DailyLog> & { log_date: string }) => Promise<void>
@@ -75,6 +77,7 @@ export function StoreProvider({ userId, children }: { userId: string; children: 
   const [data, setData] = useState<Data>(EMPTY)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [schemaMissing, setSchemaMissing] = useState(false)
   const seeded = useRef(false)
 
   const load = useCallback(async () => {
@@ -114,7 +117,8 @@ export function StoreProvider({ userId, children }: { userId: string; children: 
         partEntries: (partEntries.data ?? []) as PartEntry[],
       })
     } catch (e) {
-      setError(describe(e))
+      if (isSchemaMissing(e)) setSchemaMissing(true)
+      else setError(describe(e))
     } finally {
       setLoading(false)
     }
@@ -293,6 +297,7 @@ export function StoreProvider({ userId, children }: { userId: string; children: 
       ...data,
       loading,
       error,
+      schemaMissing,
       refresh: load,
       saveLog,
       saveSymptom,
@@ -309,7 +314,7 @@ export function StoreProvider({ userId, children }: { userId: string; children: 
       addPart,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, loading, error, load],
+    [data, loading, error, schemaMissing, load],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
@@ -350,13 +355,26 @@ async function seed(userId: string) {
   )
 }
 
+/**
+ * The tables are not there. PostgREST reports this two different ways
+ * depending on version: PGRST205 with a "schema cache" message, or the raw
+ * Postgres "relation ... does not exist".
+ */
+function isSchemaMissing(e: unknown): boolean {
+  if (typeof e !== 'object' || !e) return false
+  const code = 'code' in e ? String((e as { code: unknown }).code) : ''
+  const msg = 'message' in e ? String((e as { message: unknown }).message) : ''
+  return (
+    code === 'PGRST205' ||
+    code === '42P01' ||
+    /schema cache/i.test(msg) ||
+    (/relation/i.test(msg) && /does not exist/i.test(msg))
+  )
+}
+
 function describe(e: unknown): string {
   if (typeof e === 'object' && e && 'message' in e) {
-    const msg = String((e as { message: unknown }).message)
-    if (msg.includes('relation') && msg.includes('does not exist')) {
-      return 'The database tables are not set up yet. Run schema.sql in the Supabase SQL editor, then reload.'
-    }
-    return msg
+    return String((e as { message: unknown }).message)
   }
   return String(e)
 }

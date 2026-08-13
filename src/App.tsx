@@ -5,6 +5,7 @@ import { loadConfig } from './lib/config'
 import { StoreProvider, useStore } from './lib/store'
 import { DemoProvider, demoRequested } from './lib/demo'
 import Setup from './screens/Setup'
+import SchemaSetup from './screens/SchemaSetup'
 import Auth from './screens/Auth'
 import Today from './screens/Today'
 import Trends from './screens/Trends'
@@ -102,6 +103,9 @@ function Shell({
 }) {
   const store = useStore()
   const [tab, setTab] = useState<Tab>('today')
+
+  // Nothing else on the screen is usable until the tables exist.
+  if (store.schemaMissing) return <SchemaSetup />
 
   return (
     <div className="app">

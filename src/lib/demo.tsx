@@ -201,6 +201,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       ...data,
       loading: false,
       error: null,
+      schemaMissing: false,
       refresh: noop,
 
       saveLog: async (patch) => {
