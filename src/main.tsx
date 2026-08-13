@@ -8,3 +8,12 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+// Offline shell. Registered after load so it never competes with first paint,
+// and skipped on the dev server so it cannot serve stale files while building.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    // Document-relative, so the scope is the deployed folder (/daily-log/).
+    navigator.serviceWorker.register('./sw.js').catch(() => {})
+  })
+}
